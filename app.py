@@ -1,5 +1,7 @@
 import streamlit as st
 import math
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 st.set_page_config(page_title="Calculadora Geométrica", page_icon="📐", layout="wide")
 
@@ -19,10 +21,73 @@ elif figura == "Cilindro":
     raio = st.sidebar.slider("Raio (r)", 1.0, 10.0, 3.9, 0.1)
     altura = st.sidebar.slider("Altura (h)", 1.0, 10.0, 5.0, 0.1)
 
-col1, col2 = st.columns(2)
+# Função para desenhar a figura
+def desenhar_figura():
+    fig, ax = plt.subplots(figsize=(4, 3.5))
+    fig.patch.set_facecolor('#0e1117')
+    ax.set_facecolor('#0e1117')
+    ax.tick_params(colors='white')
+    for spine in ax.spines.values():
+        spine.set_color('#333333')
+
+    if figura == "Círculo":
+        circ = patches.Circle((0, 0), raio, color='#3b82f6', alpha=0.6, ec='#60a5fa', lw=2)
+        ax.add_patch(circ)
+        ax.plot([0, raio], [0, 0], color='white', linestyle='--', linewidth=2)
+        ax.text(raio/2, 0.5, f"r = {raio:.1f} cm", color='white', fontsize=10, fontweight='bold', ha='center')
+        ax.set_xlim(-11, 11)
+        ax.set_ylim(-11, 11)
+
+    elif figura == "Retângulo":
+        rect = patches.Rectangle((-largura/2, -altura/2), largura, altura, color='#1d4ed8', alpha=0.6, ec='#60a5fa', lw=2)
+        ax.add_patch(rect)
+        ax.text(0, -altura/2 - 1, f"b = {largura:.1f} cm", color='white', fontsize=10, fontweight='bold', ha='center')
+        ax.text(largura/2 + 0.8, 0, f"h = {altura:.1f} cm", color='white', fontsize=10, fontweight='bold', va='center')
+        ax.set_xlim(-11, 11)
+        ax.set_ylim(-11, 11)
+
+    elif figura == "Triângulo":
+        pts = [[-largura/2, -altura/2], [largura/2, -altura/2], [-largura/2, altura/2]]
+        tri = patches.Polygon(pts, color='#16a34a', alpha=0.6, ec='#4ade80', lw=2)
+        ax.add_patch(tri)
+        ax.text(0, -altura/2 - 1, f"b = {largura:.1f} cm", color='white', fontsize=10, fontweight='bold', ha='center')
+        ax.text(-largura/2 - 1.2, 0, f"h = {altura:.1f} cm", color='white', fontsize=10, fontweight='bold', va='center')
+        ax.set_xlim(-11, 11)
+        ax.set_ylim(-11, 11)
+
+    elif figura == "Esfera":
+        circ = patches.Circle((0, 0), raio, color='#2563eb', alpha=0.6, ec='#60a5fa', lw=2)
+        ellipse = patches.Ellipse((0, 0), raio*2, raio*0.6, color='#93c5fd', fill=False, lw=1.5, ls='--')
+        ax.add_patch(circ)
+        ax.add_patch(ellipse)
+        ax.plot([0, raio], [0, 0], color='white', linestyle='--', linewidth=2)
+        ax.text(raio/2, 0.5, f"r = {raio:.1f} cm", color='white', fontsize=10, fontweight='bold', ha='center')
+        ax.set_xlim(-11, 11)
+        ax.set_ylim(-11, 11)
+
+    elif figura == "Cilindro":
+        rect = patches.Rectangle((-raio, -altura/2), raio*2, altura, color='#2563eb', alpha=0.6, ec='none')
+        top = patches.Ellipse((0, altura/2), raio*2, raio*0.5, color='#60a5fa', ec='#93c5fd', lw=1.5)
+        bot = patches.Ellipse((0, -altura/2), raio*2, raio*0.5, color='#1d4ed8', ec='#60a5fa', lw=1.5)
+        ax.add_patch(rect)
+        ax.add_patch(bot)
+        ax.add_patch(top)
+        ax.text(0, altura/2 + 1, f"r = {raio:.1f} cm", color='white', fontsize=10, fontweight='bold', ha='center')
+        ax.text(raio + 1.2, 0, f"h = {altura:.1f} cm", color='white', fontsize=10, fontweight='bold', va='center')
+        ax.set_xlim(-11, 11)
+        ax.set_ylim(-11, 11)
+
+    ax.set_aspect('equal')
+    ax.axis('off')
+    return fig
+
+col1, col2 = st.columns([1, 1])
 
 with col1:
-    st.subheader("📊 Métricas da Figura")
+    st.subheader("🖼️ Visualização Geométrica")
+    st.pyplot(desenhar_figura())
+
+    st.subheader("📊 Métricas")
     if figura == "Círculo":
         area = math.pi * (raio ** 2)
         circ = 2 * math.pi * raio
