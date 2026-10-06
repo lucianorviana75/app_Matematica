@@ -2,7 +2,7 @@ import streamlit as st
 import math
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-import matplotlib.pyplot as plt
+
 
 st.set_page_config(page_title="Calculadora Geométrica", page_icon="📐", layout="wide")
 
