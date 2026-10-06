@@ -2,11 +2,9 @@
 
 ---
 
-### 💻 Como criar e atualizar o `README.md` pelo terminal:
 
-1. Executa o comando abaixo na pasta do teu projeto para sobrescrever/criar o ficheiro:
 
-```bash
+
 cat << 'EOF' > README.md
 # 📐 Calculadora Geométrica Interativa
 
